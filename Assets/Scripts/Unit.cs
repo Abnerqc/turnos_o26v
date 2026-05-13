@@ -3,28 +3,42 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-	private const int MAX_ACTION_POINTS = 2;
+	// constante
+	private const int ACTION_POINTS_MAX = 2;
 	
-	private GridPosition gridPosition;
-	private int actionPoints = MAX_ACTION_POINTS;
+	// eventos
+	public static event EventHandler OnAnyActionPointsChanged;
+	public static event EventHandler OnAnyUnitDead;
+	public static event EventHandler OnAnyUnitSpawned;	
 
     [SerializeField] private bool isEnemy;
 	
+	// variables privadas
+	private GridPosition gridPosition;
+	private int actionPoints = ACTION_POINTS_MAX;
+	private BaseAction[] baseActionArray;
+	
 	private void Awake()
 	{
-        
+        // leemos las acciones asignadas
+		baseActionArray = GetComponents<BaseAction>();
         
 	}
 	
 	private void Start()
 	{
 		// leemos en donde está la unidad
+		gridPosition = 
+			LevelGrid.Instance.GetGridPosition(
+				transform.position);
 		
 		//Le avisamos al grid del nivel que tiene una unidad en esa posición
-
+		LevelGrid.Instance.AddUnitAtGridPosition(
+			gridPosition, this);
 
         // Evento de cuando se muera la unidad
         // Avisamos que una unidad nueva fue creada
+		OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
 	}
 	
 	void Update()
@@ -53,17 +67,17 @@ public class Unit : MonoBehaviour
 		return gridPosition;
 	}
 	
-	/*public BaseAction[] GetBaseActionArray()
+	public BaseAction[] GetBaseActionArray()
 	{
 		return baseActionArray;
-	}*/
+	}
 
 	public Vector3 GetWorldPosition()
     {
         return transform.position;
     }
 
-    /*
+    
 	public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
     {
         if (CanSpendActionPointsToTakeAction(baseAction))
@@ -74,9 +88,9 @@ public class Unit : MonoBehaviour
         {
             return false;
         }
-    }*/
+    }
 
-    /*
+    
 	public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
     {
         if (actionPoints >= baseAction.GetActionPointsCost())
@@ -86,15 +100,15 @@ public class Unit : MonoBehaviour
         {
             return false;
         }
-    }*/
+    }
 
-    /*
+    
     private void SpendActionPoints(int amount)
     {
         actionPoints -= amount;
 
-        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
-    }*/
+        //OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public int GetActionPoints()
     {

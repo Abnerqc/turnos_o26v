@@ -44,21 +44,21 @@ public class LevelGrid : MonoBehaviour
         //Pathfinding.Instance.Setup(ancho, largo, cellSize);
     }
 
-    /*
+    
     public void AddUnitAtGridPosition(GridPosition pos, Unit unidad)
     {
         // Obtengo el cuadrito que está en la posición
         GridObject casilla = gridSystem.GetGridObject(pos);
         // En esa casilla agrego a la unidad
         casilla.AddUnit(unidad);
-    }*/
+    }
 
-    /*
+    
     public void RemoveUnitAtGridPosition(GridPosition pos, Unit unidad)
     {
         GridObject casilla = gridSystem.GetGridObject(pos);
         casilla.RemoveUnit(unidad);
-    }*/
+    }
 
     /*
     public List<Unit> GetUnitListAtGridPosition(GridPosition pos)
@@ -77,9 +77,10 @@ public class LevelGrid : MonoBehaviour
         OnAnyUnitMovedGridPosition?.Invoke(this, EventArgs.Empty);
     }*/
 
-    /*public GridPosition ...*/
+    public GridPosition GetGridPosition(Vector3 worldPos)
+	 => gridSystem.GetGridPosition(worldPos);
     
-    /*public Vector3 GetWorldPosition(GridPosition posGrid) =>
+    public Vector3 GetWorldPosition(GridPosition posGrid) =>
         gridSystem.GetWorldPosition(posGrid);
 
     public bool IsValidGridPosition(GridPosition pos) =>
@@ -88,18 +89,18 @@ public class LevelGrid : MonoBehaviour
     public int GetWidth() => gridSystem.GetWidth();
 
     public int GetHeight() => gridSystem.GetHeight();
-    */
+    
 	
-	/*public bool HasAnyUnitOnGridPosition(GridPosition posicion)
+	public bool HasAnyUnitOnGridPosition(GridPosition posicion)
 	{
 		GridObject objeto = gridSystem.GetGridObject(posicion);
 		return objeto.HasAnyUnit();
-	}*/
+	}
 	
-	/*public Unidad GetUnitAtGridPosition(GridPosition pos)
+	public Unit GetUnitAtGridPosition(GridPosition pos)
 	{
 		GridObject objeto = gridSystem.GetGridObject(pos);
 		return objeto.GetUnit();
-	}*/
+	}
 
 }
