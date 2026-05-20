@@ -17,12 +17,13 @@ public class Unit : MonoBehaviour
 	private GridPosition gridPosition;
 	private int actionPoints = ACTION_POINTS_MAX;
 	private BaseAction[] baseActionArray;
+	private HealthSystem healthSystem;
 	
 	private void Awake()
 	{
         // leemos las acciones asignadas
 		baseActionArray = GetComponents<BaseAction>();
-        
+        healthSystem = GetComponent<HealthSystem>();
 	}
 	
 	private void Start()
@@ -37,6 +38,7 @@ public class Unit : MonoBehaviour
 			gridPosition, this);
 
         // Evento de cuando se muera la unidad
+		healthSystem.OnDead += HealthSystem_OnDead;
         // Avisamos que una unidad nueva fue creada
 		OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
 	}
@@ -44,11 +46,23 @@ public class Unit : MonoBehaviour
 	void Update()
 	{
 		// vemos donde está ahorita la unidad
+		GridPosition posN =
+			LevelGrid.Instance.GetGridPosition(
+				transform.position);
 			
 		// preguntamos si esta posición es diferente que la guardada
+		if(posN != gridPosition)
+		{
+			// la unidad cambia de posicion
+			GridPosition oldPos = gridPosition;
+			gridPosition = posN;
+			
+			LevelGrid.Instance.UnitMovedGridPosition(
+				this, oldPos, posN);
+		}
 	}
 	
-    /*
+    
     public T GetAction<T>() where T : BaseAction
     {
         foreach (BaseAction baseAction in baseActionArray)
@@ -60,7 +74,7 @@ public class Unit : MonoBehaviour
         }
         return null;
     }
-    */
+    
 
 	public GridPosition GetGridPosition()
 	{
@@ -107,7 +121,7 @@ public class Unit : MonoBehaviour
     {
         actionPoints -= amount;
 
-        //OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public int GetActionPoints()
@@ -132,13 +146,13 @@ public class Unit : MonoBehaviour
         return isEnemy;
     }
 
-    /*
+    
     public void Damage(int damageAmount)
     {
         healthSystem.Damage(damageAmount);
-    }*/
+    }
 
-    /* nuevo
+    
     private void HealthSystem_OnDead(object sender, EventArgs e)
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
@@ -146,12 +160,12 @@ public class Unit : MonoBehaviour
         Destroy(gameObject);
 
         OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
-    }*/
+    }
     
-    /* nuevo
+    
     public float GetHealthNormalized()
     {
         return healthSystem.GetHealthNormalized();
-    }*/
+    }
 
 }

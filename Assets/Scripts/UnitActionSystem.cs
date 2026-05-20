@@ -136,7 +136,9 @@ public class UnitActionSystem : MonoBehaviour
     {
         selectedUnit = unit;
 
-        //SetSelectedAction(unit.GetMoveAction());
+		// al seleccionar una unidad diferente
+		// asignamos una acción por default seleccionada
+        SetSelectedAction(unit.GetAction<SpinAction>());
 
         OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
     }
